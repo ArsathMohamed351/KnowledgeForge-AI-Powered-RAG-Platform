@@ -105,7 +105,7 @@ def analyze_dataframe(file_path, question):
                     result = df.nsmallest(n, col)[col].to_string()
                     return f"Bottom {n} {col}:\n{result}"
             return "No numeric columns found"
-
+# GROUP BY
         if "by" in q or "per" in q or "group" in q:
             # find group column
             for col in df.columns:
