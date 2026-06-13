@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import re
 
 def is_analytic_question(question):
     """
@@ -7,17 +8,7 @@ def is_analytic_question(question):
     """
     question = question.lower()
 
-    keywords = [
-        "count", "total", "sum", "average", "avg", "mean", 
-        "highest", "lowest", "most", "least", "top", "bottom", 
-        "maximum", "minimum", "spent", "revenue", "sales", "profit", 
-        "percentage", "compare", "trend", "group by", "distribution",
-        "how many", "what is the", "calculate", "find", "show me",
-        "list", "rank", "sort", "by", "per", "per year", "per month",
-        "rows", "records", "entries", "items", "products", "customers",
-        "orders", "unique"
-    ]
-
+    keywords = [ "count", "total", "sum", "average", "avg", "mean",  "highest", "lowest", "most", "least", "top", "bottom",  "maximum", "minimum", "spent", "revenue", "sales", "profit",  "percentage", "compare", "trend", "group by", "distribution", "how many", "what is the", "calculate", "find", "show me", "list", "rank", "sort", "by", "per", "per year", "per month", "rows", "records", "entries", "items", "products", "customers", "orders", "unique" ]
     return any(keyword in question for keyword in keywords)
 
 
@@ -28,8 +19,6 @@ def analyze_dataframe(file_path, question):
     """
     try:
         ext = os.path.splitext(file_path)[1].lower()
-
-        # Load data
         if ext == ".csv":
             df = pd.read_csv(file_path)
         elif ext in [".xlsx", ".xls"]:
@@ -40,44 +29,30 @@ def analyze_dataframe(file_path, question):
         # Validate dataframe
         if df.empty:
             return "The dataset is empty"
-
         q = question.lower()
         
-        # ========================================
-        # COUNT / HOW MANY
-        # ========================================
         if any(word in q for word in ["how many", "count", "total", "rows", "records", "entries"]):
             if "unique" in q:
-                # Find the column mentioned
                 for col in df.columns:
                     if col.lower() in q:
                         unique_count = df[col].nunique()
                         return f"Unique {col}: {unique_count:,}"
-                # If no column found, count all unique in first column
                 return f"Unique values in {df.columns[0]}: {df[df.columns[0]].nunique():,}"
             else:
-                # Simple row count
                 return f"Total Records: {len(df):,}"
-
-        # ========================================
-        # SUM / TOTAL
-        # ========================================
+            
         if any(word in q for word in ["sum", "total", "all together"]):
             numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
             if numeric_cols:
-                # Find relevant column by name
                 for col in numeric_cols:
                     if any(word in q for word in [col.lower(), "price", "amount", "cost", "revenue", "sales", "value"]):
                         total = df[col].sum()
                         return f"Total {col}: {total:,.2f}"
-                # Default to first numeric column
                 total = df[numeric_cols[0]].sum()
                 return f"Total {numeric_cols[0]}: {total:,.2f}"
             return "No numeric columns found"
 
-        # ========================================
-        # AVERAGE / MEAN
-        # ========================================
+# AVERAGE / MEAN
         if any(word in q for word in ["average", "avg", "mean"]):
             numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
             if numeric_cols:
@@ -85,14 +60,10 @@ def analyze_dataframe(file_path, question):
                     if col.lower() in q or any(word in q for word in [col.lower(), "price", "amount", "cost"]):
                         avg = df[col].mean()
                         return f"Average {col}: {avg:,.2f}"
-                # Default to all numeric columns
                 result = df[numeric_cols].mean()
                 return result.to_string()
             return "No numeric columns found"
 
-        # ========================================
-        # MAXIMUM
-        # ========================================
         if any(word in q for word in ["maximum", "max", "highest", "largest"]):
             numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
             if numeric_cols:
@@ -104,9 +75,7 @@ def analyze_dataframe(file_path, question):
                 return result.to_string()
             return "No numeric columns found"
 
-        # ========================================
-        # MINIMUM
-        # ========================================
+# MINIMUM 
         if any(word in q for word in ["minimum", "min", "lowest", "smallest"]):
             numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
             if numeric_cols:
@@ -118,15 +87,10 @@ def analyze_dataframe(file_path, question):
                 return result.to_string()
             return "No numeric columns found"
 
-        # ========================================
-        # TOP / BOTTOM
-        # ========================================
+# TOP / BOTTOM
         if "top" in q or "bottom" in q:
-            # Extract number if mentioned
-            import re
             match = re.search(r'(\d+)', q)
             n = int(match.group(1)) if match else 5
-            
             numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
             if numeric_cols:
                 col = numeric_cols[0]
@@ -134,7 +98,6 @@ def analyze_dataframe(file_path, question):
                     if c.lower() in q:
                         col = c
                         break
-                
                 if "top" in q or "highest" in q:
                     result = df.nlargest(n, col)[col].to_string()
                     return f"Top {n} {col}:\n{result}"
@@ -143,21 +106,15 @@ def analyze_dataframe(file_path, question):
                     return f"Bottom {n} {col}:\n{result}"
             return "No numeric columns found"
 
-        # ========================================
-        # GROUP BY / BY COLUMN
-        # ========================================
         if "by" in q or "per" in q or "group" in q:
-            # Try to find group column
+            # find group column
             for col in df.columns:
                 if col.lower() in q:
                     # Found a column name in question
                     result = df[col].value_counts().to_string()
                     return f"Breakdown by {col}:\n{result}"
             return "Could not identify column for grouping"
-
-        # ========================================
-        # DEFAULT - SHOW BASIC STATS
-        # ========================================
+        
         numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
         if numeric_cols:
             stats = df[numeric_cols].describe().to_string()
@@ -168,25 +125,18 @@ def analyze_dataframe(file_path, question):
     except Exception as e:
         return f"Error analyzing data: {str(e)}"
 
-
 def get_dataframe_summary(file_path):
     """
     Get basic summary of a dataframe for context
     """
     try:
-        ext = os.path.splitext(file_path)[1].lower()
-        
+        ext = os.path.splitext(file_path)[1].lower() 
         if ext == ".csv":
             df = pd.read_csv(file_path, nrows=100)
         elif ext in [".xlsx", ".xls"]:
             df = pd.read_excel(file_path)
         else:
             return None
-        
-        return {
-            "shape": df.shape,
-            "columns": df.columns.tolist(),
-            "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()}
-        }
+        return { "shape": df.shape, "columns": df.columns.tolist(), "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()} }
     except:
         return None

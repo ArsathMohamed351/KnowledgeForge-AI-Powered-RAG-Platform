@@ -26,7 +26,6 @@ def add_documents(vectorstore, docs):
             print(f"Indexed {min(i + batch_size, len(chunks))}/{len(chunks)}")
         except Exception as e:
             print(f"Batch Failed: {e}")
-
     print("Document Indexing Complete")
 
 def select_best_dataset(docs):
@@ -38,7 +37,6 @@ def select_best_dataset(docs):
             dataset_score[dataset_id] = dataset_score.get(dataset_id, 0) + 1
     if not dataset_score:
         return None
-
     return max(dataset_score, key=dataset_score.get)
 
 def hybrid_search(vectorstore, question, k=5):
@@ -69,8 +67,7 @@ def hybrid_search(vectorstore, question, k=5):
                     if doc_id in combined:
                         combined[doc_id]['bm25_score'] = 0.5
                     else:
-                        combined[doc_id] = {'doc': doc, 'bm25_score': 0.5}
-                
+                        combined[doc_id] = {'doc': doc, 'bm25_score': 0.5}          
                 final_results = []
                 for item in combined.values():
                     semantic = item.get('semantic_score', 0)

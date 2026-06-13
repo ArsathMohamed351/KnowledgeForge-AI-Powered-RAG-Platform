@@ -95,7 +95,7 @@ with st.sidebar:
         if st.button("Clear History", use_container_width=True):
             clear_history()
             st.session_state.conversation_history = []
-            st.success("✓ Chat history cleared")
+            st.success("Chat history cleared")
             time.sleep(1)
             st.rerun()
     
@@ -109,14 +109,14 @@ with st.sidebar:
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("✓ Yes, Delete", use_container_width=True, key="confirm_delete"):
+            if st.button("Yes, Delete", use_container_width=True, key="confirm_delete"):
                 try:
                     if os.path.exists("uploads"):
                         shutil.rmtree("uploads")
                         os.makedirs("uploads", exist_ok=True)    
                     st.session_state.uploaded_hashes = set()
                     st.session_state.show_delete_warning = False
-                    st.success("✓ All uploads deleted!")
+                    st.success("All uploads deleted!")
                     time.sleep(1)
                     st.rerun()
                 except Exception as e:
@@ -159,7 +159,7 @@ if uploaded_files:
                 docs = load_file(file_path)
                 add_documents(st.session_state.vectorstore, docs)
                 st.session_state.uploaded_hashes.add(file_hash)
-                st.success(f"✓ {uploaded_file.name} indexed ({len(docs)} chunks)")
+                st.success(f"{uploaded_file.name} indexed ({len(docs)} chunks)")
             except Exception as e:
                 st.error(f"Error processing {uploaded_file.name}: {str(e)}")
 if st.session_state.get("show history", False):
@@ -223,11 +223,7 @@ if question:
         start_time = time.time()
         with st.spinner("Searching and analyzing..."):
             try:
-                result = ask_question(
-                    st.session_state.vectorstore,
-                    question,
-                    conversation_history=st.session_state.conversation_history
-                )
+                result = ask_question( st.session_state.vectorstore, question, conversation_history=st.session_state.conversation_history )
                 latency = round(time.time() - start_time, 2)
                 answer = result.get("answer", "No response generated")
                 sources = result.get("sources", [])
@@ -247,7 +243,7 @@ if question:
             st.write(answer)
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.caption(f"⏱️ {latency}s")
+                st.caption(f"{latency}s")
             with col2:
                 if is_analytics:
                     st.caption("Analytics")
