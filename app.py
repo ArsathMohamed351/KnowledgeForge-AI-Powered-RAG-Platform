@@ -16,7 +16,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 st.set_page_config( page_title="Personal RAG Assistant", layout="wide", initial_sidebar_state="expanded" )
 
-# designing
+# Basic designing
 
 st.markdown("""
 <style>
