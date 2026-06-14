@@ -12,7 +12,7 @@ __pycache__/
 Run RAG.txt
 uploads/
 chroma_db/
-
+pyproject.toml
 chat_history.db
 
 *.pyc
