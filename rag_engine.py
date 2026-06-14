@@ -189,15 +189,16 @@ def ask_question(vectorstore, question, conversation_history=None):
         conversation_context = ""
         if conversation_history:
             conversation_context = build_conversation_context(conversation_history, max_history=3)
-
+        
         prompt = f"""{conversation_context}
 You are a document QA assistant. Answer questions ONLY using the provided context.
 
 PRIMARY RULES:
 - Answer ONLY using the context provided
+- When answering questions about a person, provide a complete summary using all relevant information found in the context, not just the person's name.
+- Separate skills, education, experience, and certifications into their proper categories when present in the context.
 - Do NOT hallucinate or make up information
 - If information is not in context, say: "I couldn't find this information in your documents."
-- Be concise and direct
 - If asked about previous questions, reference them naturally from conversation history
 - No guessing or filling missing values
 - No making up trends, causes, or business insights

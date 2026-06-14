@@ -21,23 +21,21 @@ st.set_page_config( page_title="Personal RAG Assistant", layout="wide", initial_
 st.markdown("""
 <style>
 
-/*Background */
+/*BG*/
 .stApp {
     background: linear-gradient( 135deg, #020617 0%, #0f172a 25%, #1e293b 75%, #334155 100% ); }
 
-/* Text Colors */
 h1, h2, h3, p, div, span, label { color: #f8fafc; }
 
-/* Sidebar */
+/*Menubar*/
 [data-testid="stSidebar"] { background: #111827; border-right: 1px solid rgba(255,255,255,0.08); }
 
-/* Chat messages */
+/*Chat msg*/
 .stChatMessage { background-color: rgba(30, 41, 59, 0.5); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
 
 /* Input box */
 .stChatInputContainer { background-color: rgba(15, 23, 42, 0.8); }
 
-/* Source info */
 .stInfo { background-color: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; }
 
 /* Hide Streamlit Branding */
@@ -86,7 +84,7 @@ with st.sidebar:
     history_count = len(get_chat_history())
     st.metric("Chat History", history_count)
     
-    if st.button("📋 View Chat History", use_container_width=True):
+    if st.button("View Chat History", use_container_width=True):
         st.session_state.show_history = not st.session_state.get("show_history", False)
     
     col1, col2 = st.columns(2)

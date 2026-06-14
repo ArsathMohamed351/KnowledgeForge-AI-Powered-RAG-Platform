@@ -8,7 +8,7 @@ def is_analytic_question(question):
     """
     question = question.lower()
 
-    keywords = [ "count", "total", "sum", "average", "avg", "mean",  "highest", "lowest", "most", "least", "top", "bottom",  "maximum", "minimum", "spent", "revenue", "sales", "profit",  "percentage", "compare", "trend", "group by", "distribution", "how many", "what is the", "calculate", "find", "show me", "list", "rank", "sort", "by", "per", "per year", "per month", "rows", "records", "entries", "items", "products", "customers", "orders", "unique" ]
+    keywords = [ "count", "total", "sum", "average", "avg", "mean", "highest", "lowest", "most", "least", "top", "bottom", "maximum", "minimum", "spent", "revenue", "profit", "percentage", "compare", "trend", "group by", "distribution", "how many", "calculate", "rank", "sort", "per year", "per month", "rows", "records", "entries", "unique" ]
     return any(keyword in question for keyword in keywords)
 
 
