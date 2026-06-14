@@ -310,7 +310,7 @@ Version 2.0 (Q3 2026)
 
 ## Contact
 
-GitHub: https://github.com/ArsathMohamed351/KnowledgeForge
+GitHub: https://github.com/ArsathMohamed351/KnowledgeForge <br>
 Email: arsath.pvt351@gmail.com
 LinkedIn: [https://linkedin.com/in/arsathmohamed](https://www.linkedin.com/in/arsath-mohamed-710067323/)
 
