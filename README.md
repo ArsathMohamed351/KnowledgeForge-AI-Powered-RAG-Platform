@@ -43,7 +43,7 @@ Persistence Layer (ChromaDB, SQLite, File Storage)
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Python 3.13 or higher
 - Ollama installed and running
 - 4GB RAM minimum
 
