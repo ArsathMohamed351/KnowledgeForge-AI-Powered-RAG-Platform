@@ -13,5 +13,6 @@ Run RAG.txt
 uploads/
 chroma_db/
 chat_history.db
+Architecture
 Project Video
 *.pyc
